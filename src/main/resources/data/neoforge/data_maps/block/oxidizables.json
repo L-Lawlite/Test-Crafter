@@ -1,0 +1,13 @@
+{
+  "values": {
+    "test_crafter:test_copper_block": {
+      "next_oxidation_stage": "test_crafter:test_exposed_copper_block"
+    },
+    "test_crafter:test_exposed_copper_block": {
+      "next_oxidation_stage": "test_crafter:test_weathered_copper_block"
+    },
+    "test_crafter:test_weathered_copper_block": {
+      "next_oxidation_stage": "test_crafter:test_oxidized_copper_block"
+    }
+  }
+}
