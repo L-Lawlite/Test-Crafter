@@ -1,4 +1,4 @@
-package net.lawliet.test_crafter;
+package net.lawliet.testCrafter;
 
 import java.util.List;
 import java.util.Set;
