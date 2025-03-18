@@ -4,6 +4,7 @@ package net.lawliet.testCrafter;
 //import net.lawliet.testCrafter.blockEntities.complexBlock.ComplexBlock;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterBlock;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterMenu;
+import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterScreen;
 import net.lawliet.testCrafter.lootItemConditions.ModExistCondition;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -123,7 +125,7 @@ public class Registration {
 
         TEST_EXPOSED_COPPER_BLOCK = BLOCKS.registerBlock("test_exposed_copper_block",
                 (properties) -> new TestWeatheringCopperFullBlock(WeatheringCopper.WeatherState.EXPOSED,properties),
-                BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK).randomTicks()
+                BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK)
         );
         TEST_EXPOSED_COPPER_ITEM = ITEMS.registerSimpleBlockItem("test_exposed_copper_block",TEST_EXPOSED_COPPER_BLOCK);
 
@@ -186,5 +188,9 @@ public class Registration {
     public static void addCapabilities(RegisterCapabilitiesEvent event) {
 //        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,Registration.COMPLEX_BLOCK_ENTITY.get(),(be,direction) -> be.getItemHandler());
 
+    }
+
+    public static void registerScreen(RegisterMenuScreensEvent event) {
+        event.register(CUSTOM_CRATER_MENU.get(), CustomCrafterScreen::new);
     }
 }
