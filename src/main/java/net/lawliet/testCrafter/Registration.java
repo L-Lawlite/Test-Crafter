@@ -5,8 +5,10 @@ package net.lawliet.testCrafter;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterBlock;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterMenu;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterScreen;
+import net.lawliet.testCrafter.blocks.customCrafter.recipes.CustomCrafterRecipe;
 import net.lawliet.testCrafter.lootItemConditions.ModExistCondition;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
@@ -14,6 +16,9 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -42,7 +47,9 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES;
     public static final DeferredRegister<ResourceLocation> CUSTOM_STATS;
     public static final DeferredRegister<MenuType<?>> MENU_TYPES;
-    public static final DeferredRegister<LootItemConditionType> LOOT_ITEM_CONDITION_TYPE;
+    public static final DeferredRegister<LootItemConditionType> LOOT_ITEM_CONDITION_TYPES;
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS;
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES;
 
     //Simple Block
     public static final DeferredBlock<Block> SIMPLE_BLOCK;
@@ -72,6 +79,9 @@ public class Registration {
     public static final DeferredItem<BlockItem> TEST_WEATHERED_COPPER_ITEM;
     public static final DeferredItem<BlockItem> TEST_OXIDIZED_COPPER_ITEM;
 
+    //Recipes
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CustomCrafterRecipe>> CUSTOM_CRAFTER_SERIALIZER;
+    public static final DeferredHolder<RecipeType<?>,RecipeType<CustomCrafterRecipe>> CUSTOM_CRAFTER_RECIPE_TYPE;
 
     // Registries
     static {
@@ -80,7 +90,9 @@ public class Registration {
         BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,TestCrafter.MODID);
         CUSTOM_STATS = DeferredRegister.create(Registries.CUSTOM_STAT,TestCrafter.MODID);
         MENU_TYPES = DeferredRegister.create(Registries.MENU,TestCrafter.MODID);
-        LOOT_ITEM_CONDITION_TYPE = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE,TestCrafter.MODID);
+        LOOT_ITEM_CONDITION_TYPES = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE,TestCrafter.MODID);
+        RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER,TestCrafter.MODID);
+        RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,TestCrafter.MODID);
     }
 
     //block registries
@@ -154,7 +166,18 @@ public class Registration {
 
     //Predicates
     static {
-        MOD_EXIST = LOOT_ITEM_CONDITION_TYPE.register("mod_exist",() -> new LootItemConditionType( ModExistCondition.CODEC));
+        MOD_EXIST = LOOT_ITEM_CONDITION_TYPES.register("mod_exist",() -> new LootItemConditionType( ModExistCondition.CODEC));
+    }
+
+    //Recipes
+    static {
+        CUSTOM_CRAFTER_SERIALIZER = RECIPE_SERIALIZERS.register("custom_crafter",CustomCrafterRecipe.Serializer::new);
+        CUSTOM_CRAFTER_RECIPE_TYPE = RECIPE_TYPES.register("custom_crafter_recipe",() -> new RecipeType<CustomCrafterRecipe>() {
+            @Override
+            public String toString() {
+                return "custom_crafter_recipe";
+            }
+        });
     }
 
     public static void init(IEventBus modEventBus) {
@@ -163,7 +186,9 @@ public class Registration {
         BLOCK_ENTITIES.register(modEventBus);
         CUSTOM_STATS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
-        LOOT_ITEM_CONDITION_TYPE.register(modEventBus);
+        LOOT_ITEM_CONDITION_TYPES.register(modEventBus);
+        RECIPE_SERIALIZERS.register(modEventBus);
+        RECIPE_TYPES.register(modEventBus);
     }
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {

@@ -14,6 +14,7 @@ public class CustomCrafterMenu extends AbstractContainerMenu{
     private final ContainerLevelAccess access;
 //    private final Player player;
     protected Container container;
+    private final Player player;
 
     /*
      CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -47,7 +48,7 @@ public class CustomCrafterMenu extends AbstractContainerMenu{
     public CustomCrafterMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(Registration.CUSTOM_CRATER_MENU.get(),containerId);
         this.access = access;
-//        this.player = playerInventory.player;
+        this.player = playerInventory.player;
         this.container = new SimpleContainer(8);
         addPlayerInventory(playerInventory);
         addPlayerHotBar(playerInventory);
