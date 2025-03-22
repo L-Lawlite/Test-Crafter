@@ -10,6 +10,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -26,7 +27,7 @@ public class CustomCrafterBlock extends Block{
     @Nullable
     @Override
     protected MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-       return new SimpleMenuProvider((containerId,playerInventory,player) -> new CustomCrafterMenu(containerId,playerInventory), Component.translatable("menu.title.test_crafter.custom_crafter_menu"));
+       return new SimpleMenuProvider((containerId,playerInventory,player) -> new CustomCrafterMenu(containerId,playerInventory, ContainerLevelAccess.create(level,pos)), Component.translatable("menu.title.test_crafter.custom_crafter_menu"));
     }
 
     @NotNull

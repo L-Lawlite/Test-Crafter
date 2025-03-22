@@ -33,6 +33,5 @@ public class utilityCodec {
             : DataResult.success(validation)
     );
 
-//    public static final StreamCodec<RegistryFriendlyByteBuf,Optional<Map<String, Criterion<?>>>> CRITERIA_STREAM_CODEC = StreamCodec.composite();
 
 }

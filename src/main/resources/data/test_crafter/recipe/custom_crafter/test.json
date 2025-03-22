@@ -1,0 +1,10 @@
+{
+  "type": "test_crafter:custom_crafter",
+  "ingredients": [
+    "minecraft:grass_block"
+  ],
+  "extra_item": "minecraft:grass_block",
+  "output": {
+    "id": "minecraft:iron_block"
+  }
+}
