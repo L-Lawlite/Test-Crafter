@@ -7,16 +7,16 @@ import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterMenu;
 import net.lawliet.testCrafter.blocks.customCrafter.CustomCrafterScreen;
 import net.lawliet.testCrafter.blocks.customCrafter.recipes.CustomCrafterRecipe;
 import net.lawliet.testCrafter.lootItemConditions.ModExistCondition;
+import net.lawliet.testCrafter.blocks.pressurePlates.PlayerOnlyPressurePlate.PlayerOnlyPressurePlate;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -25,6 +25,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -50,6 +53,9 @@ public class Registration {
     public static final DeferredRegister<LootItemConditionType> LOOT_ITEM_CONDITION_TYPES;
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS;
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES;
+
+    //Block Set Types
+    public static final BlockSetType NETHERITE_BLOCK_SET_TYPE;
 
     //Simple Block
     public static final DeferredBlock<Block> SIMPLE_BLOCK;
@@ -79,6 +85,10 @@ public class Registration {
     public static final DeferredItem<BlockItem> TEST_WEATHERED_COPPER_ITEM;
     public static final DeferredItem<BlockItem> TEST_OXIDIZED_COPPER_ITEM;
 
+    //Player Pressure Plate
+    public static final DeferredBlock<Block> PLAYER_ONLY_PRESSURE_PLATE;
+    public static final DeferredItem<BlockItem> PLAYER_ONLY_PRESSURE_PLATE_ITEM;
+
     //Recipes
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CustomCrafterRecipe>> CUSTOM_CRAFTER_SERIALIZER;
     public static final DeferredHolder<RecipeType<?>,RecipeType<CustomCrafterRecipe>> CUSTOM_CRAFTER_RECIPE_TYPE;
@@ -95,6 +105,25 @@ public class Registration {
         RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,TestCrafter.MODID);
     }
 
+    // block set types
+    static {
+        NETHERITE_BLOCK_SET_TYPE = BlockSetType.register(new BlockSetType(
+                "netherite",
+                false,
+                false,
+                false,
+                BlockSetType.PressurePlateSensitivity.EVERYTHING,
+                SoundType.METAL,
+                SoundEvents.IRON_DOOR_CLOSE,
+                SoundEvents.IRON_DOOR_OPEN,
+                SoundEvents.IRON_TRAPDOOR_CLOSE,
+                SoundEvents.IRON_TRAPDOOR_OPEN,
+                SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF,
+                SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+                SoundEvents.STONE_BUTTON_CLICK_OFF,
+                SoundEvents.STONE_BUTTON_CLICK_ON
+        ));
+    }
     //block registries
     static {
         SIMPLE_BLOCK = BLOCKS.registerSimpleBlock("simple_block",
@@ -152,6 +181,18 @@ public class Registration {
                 BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK).randomTicks()
         );
         TEST_OXIDIZED_COPPER_ITEM = ITEMS.registerSimpleBlockItem("test_oxidized_copper_block",TEST_OXIDIZED_COPPER_BLOCK);
+
+        PLAYER_ONLY_PRESSURE_PLATE = BLOCKS.registerBlock("player_only_pressure_plate",
+                properties -> new PlayerOnlyPressurePlate(NETHERITE_BLOCK_SET_TYPE,properties),
+                BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.COLOR_BLACK)
+                        .requiresCorrectToolForDrops()
+                        .strength(50.0F, 1200.0F)
+                        .forceSolidOn()
+                        .noCollission()
+                        .pushReaction(PushReaction.DESTROY)
+        );
+        PLAYER_ONLY_PRESSURE_PLATE_ITEM = ITEMS.registerSimpleBlockItem("player_only_pressure_plate",PLAYER_ONLY_PRESSURE_PLATE);
     }
 
     //Stats
@@ -200,7 +241,7 @@ public class Registration {
             event.accept(TEST_EXPOSED_COPPER_ITEM);
             event.accept(TEST_WEATHERED_COPPER_ITEM);
             event.accept(TEST_OXIDIZED_COPPER_ITEM);
-
+            event.accept(PLAYER_ONLY_PRESSURE_PLATE_ITEM);
         }
     }
 
