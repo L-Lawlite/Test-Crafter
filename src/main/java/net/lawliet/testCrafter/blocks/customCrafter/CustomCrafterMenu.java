@@ -3,7 +3,7 @@ package net.lawliet.testCrafter.blocks.customCrafter;
 import net.lawliet.testCrafter.Registration;
 import net.lawliet.testCrafter.blocks.customCrafter.recipes.CustomCrafterRecipe;
 import net.lawliet.testCrafter.blocks.customCrafter.recipes.CustomCrafterRecipeInput;
-import net.lawliet.testCrafter.gui.CustomCrafterResultSlot;
+import net.lawliet.testCrafter.blocks.customCrafter.recipes.CustomCrafterResultSlot;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

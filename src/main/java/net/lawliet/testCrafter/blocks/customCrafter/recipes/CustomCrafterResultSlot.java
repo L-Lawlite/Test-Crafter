@@ -1,4 +1,4 @@
-package net.lawliet.testCrafter.gui;
+package net.lawliet.testCrafter.blocks.customCrafter.recipes;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
