@@ -3,6 +3,7 @@ package net.lawliet.testCrafter.blocks.customCrafter.recipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lawliet.testCrafter.Registration;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,14 +13,12 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import static net.lawliet.testCrafter.codec.utilityCodec.sizeLimitedList;
 
 
-public record CustomCrafterRecipe(List<Ingredient> input, Ingredient extraItem, ItemStack output) implements Recipe<CustomCrafterRecipeInput> {
+public record CustomCrafterRecipe(List<ItemPredicate> input, ItemPredicate extraItem, ItemStack output) implements Recipe<CustomCrafterRecipeInput> {
 
     @Override
     public boolean matches(CustomCrafterRecipeInput customCrafterRecipeInput, Level level) {
@@ -64,14 +63,14 @@ public record CustomCrafterRecipe(List<Ingredient> input, Ingredient extraItem, 
 
     public static class Serializer implements RecipeSerializer<CustomCrafterRecipe> {
         public static final MapCodec<CustomCrafterRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                sizeLimitedList(Ingredient.CODEC,1,6).fieldOf("ingredients").forGetter(CustomCrafterRecipe::input),
-                Ingredient.CODEC.fieldOf("extra_item").forGetter(CustomCrafterRecipe::extraItem),
+                sizeLimitedList(ItemPredicate.CODEC,1,6).fieldOf("ingredients").forGetter(CustomCrafterRecipe::input),
+                ItemPredicate.CODEC.fieldOf("extra_item").forGetter(CustomCrafterRecipe::extraItem),
                 ItemStack.CODEC.fieldOf("output").forGetter(CustomCrafterRecipe::output)
         ).apply(inst,CustomCrafterRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf,CustomCrafterRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), CustomCrafterRecipe::input,
-                Ingredient.CONTENTS_STREAM_CODEC, CustomCrafterRecipe::extraItem,
+                ByteBufCodecs.fromCodec(ItemPredicate.CODEC).apply(ByteBufCodecs.list()), CustomCrafterRecipe::input,
+                ByteBufCodecs.fromCodec(ItemPredicate.CODEC), CustomCrafterRecipe::extraItem,
                 ItemStack.STREAM_CODEC, CustomCrafterRecipe::output,
                 CustomCrafterRecipe::new
         );
